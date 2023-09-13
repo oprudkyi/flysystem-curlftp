@@ -1,9 +1,9 @@
-# Flysystem Adapter for the FTP with cURL implementation
+# Flysystem V2/V3 Adapter for the FTP with cURL implementation
 
-[![Latest Stable Version](https://poser.pugx.org/vladimir-yuldashev/flysystem-curlftp/v/stable?format=flat-square)](https://packagist.org/packages/vladimir-yuldashev/flysystem-curlftp)
-[![Build Status](https://github.com/vyuldashev/flysystem-curlftp/workflows/Tests/badge.svg)](https://github.com/vyuldashev/flysystem-curlftp/actions)
+[![Latest Stable Version](https://poser.pugx.org/oprudkyi/flysystem-curlftp/v/stable?format=flat-square)](https://packagist.org/packages/oprudkyi/flysystem-curlftp)
+[![Build Status](https://github.com/oprudkyi/flysystem-curlftp/workflows/Tests/badge.svg)](https://github.com/oprudkyi/flysystem-curlftp/actions)
 [![StyleCI](https://styleci.io/repos/90028075/shield?branch=master)](https://styleci.io/repos/90028075)
-[![License](https://poser.pugx.org/vladimir-yuldashev/flysystem-curlftp/license?format=flat-square)](https://packagist.org/packages/vladimir-yuldashev/flysystem-curlftp)
+[![License](https://poser.pugx.org/oprudkyi/flysystem-curlftp/license?format=flat-square)](https://packagist.org/packages/oprudkyi/flysystem-curlftp)
 
 This package contains a [Flysystem](https://flysystem.thephpleague.com/) FTP adapter with cURL implementation.
 While compatible with [Flysystem FTP Adapter](https://flysystem.thephpleague.com/docs/adapter/ftp/) it additionally provides support for:
@@ -11,12 +11,19 @@ While compatible with [Flysystem FTP Adapter](https://flysystem.thephpleague.com
 - implicit FTP over TLS ([FTPS](https://en.wikipedia.org/wiki/FTPS#Implicit))
 - proxies
 
+As well it is a fork and a temporary drop-in replacement of [flysystem-curlftp](https://github.com/vyuldashev/flysystem-curlftp/pull/41):
+
+- support of Flysystem V2/V3
+- re-implemented based on [flysystem-ftp](https://github.com/thephpleague/flysystem-ftp/)
+- updated dependencies
+- phpstan level 6
+
 ## Installation
 
 You can install the package via composer:
 
 ``` bash
-composer require vladimir-yuldashev/flysystem-curlftp
+composer require oprudkyi/flysystem-curlftp
 ```
 
 ## Usage
@@ -56,7 +63,7 @@ $adapter = new CurlFtpAdapter(
 );
 
 $filesystem = new Filesystem($adapter);
-``` 
+```
 
 ## Testing
 
@@ -67,7 +74,11 @@ $ composer test
 ## Upgrade from 1.x
 
 - use CurlFtpConnectionOptions for creating adapter
+
 ```
+    use VladimirYuldashev\Flysystem\CurlFtpAdapter;
+    use VladimirYuldashev\Flysystem\CurlFtpConnectionOptions;
+    ...
     $adapter = new CurlFtpAdapter(
       CurlFtpConnectionOptions::fromArray([
     ...
