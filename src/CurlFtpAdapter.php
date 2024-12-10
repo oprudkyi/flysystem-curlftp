@@ -16,6 +16,7 @@ use League\Flysystem\UnableToCopyFile;
 use League\Flysystem\UnableToCreateDirectory;
 use League\Flysystem\UnableToDeleteDirectory;
 use League\Flysystem\UnableToDeleteFile;
+use League\Flysystem\UnableToListContents;
 use League\Flysystem\UnableToMoveFile;
 use League\Flysystem\UnableToReadFile;
 use League\Flysystem\UnableToRetrieveMetadata;
@@ -507,6 +508,14 @@ class CurlFtpAdapter implements FilesystemAdapter
 
         $request = rtrim('LIST '.$options.$path);
         $listing = $this->connection()->exec([CURLOPT_CUSTOMREQUEST => $request]);
+
+        if ($listing === false) {
+            throw UnableToListContents::atLocation(
+                $path,
+                strpos($options, 'R') !== false,
+                new RuntimeException($this->connection->lastError()),
+            );
+        }
 
         return explode(PHP_EOL, $listing);
     }
