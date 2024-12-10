@@ -230,6 +230,30 @@ class CurlFtpAdapterTest extends TestCase
     }
 
     /**
+     * @dataProvider withSubSubFolderProvider
+     */
+    public function testListContentsDeep(string $path): void
+    {
+        $contents = $this->faker()->text;
+        $this->createResourceFile($path, $contents);
+
+        $this->assertCount(1, iterator_to_array($this->adapter->listContents(dirname($path), true), false));
+        $this->assertCount(2, iterator_to_array($this->adapter->listContents(dirname(dirname($path)), true), false));
+        $this->assertCount(0, iterator_to_array($this->adapter->listContents(dirname(dirname($path)).'/not exists folder', true), false));
+    }
+
+    /**
+     * @dataProvider withSubSubFolderProvider
+     */
+    public function testListContentsDeepEmptyPath(string $path): void
+    {
+        $this->assertCount(0, iterator_to_array($this->adapter->listContents(dirname($path), true), false));
+        $this->assertCount(0, iterator_to_array($this->adapter->listContents(dirname(dirname($path)), true), false));
+        $this->assertCount(0, iterator_to_array($this->adapter->listContents(dirname(dirname($path)).'/not exists folder', true), false));
+        $this->assertCount(0, iterator_to_array($this->adapter->listContents(dirname(dirname($path)).'/not exists folder', false), false));
+    }
+
+    /**
      * Tests that a FTP server is still in root directory as its working directory
      * after reading a file, especially if this file is in a subfolder.
      *
@@ -362,6 +386,22 @@ class CurlFtpAdapterTest extends TestCase
             [self::faker()->word.'/'.self::randomFileName()],
             [self::faker()->word.'/'.self::randomFileName()],
             [self::faker()->word.'/'.self::randomFileName()],
+        ];
+    }
+
+    public static function withSubSubFolderProvider(): array
+    {
+        return [
+            ['test/test/test.txt'],
+            ['тёст/тёст/тёст.txt'],
+            ['test 1/test 1/test.txt'],
+            ['test/test/test 1.txt'],
+            ['test  1/test  2/test  3.txt'],
+            [self::faker()->word.'/'.self::faker()->word.'/'.self::randomFileName()],
+            [self::faker()->word.'/'.self::faker()->word.'/'.self::randomFileName()],
+            [self::faker()->word.'/'.self::faker()->word.'/'.self::randomFileName()],
+            [self::faker()->word.'/'.self::faker()->word.'/'.self::randomFileName()],
+            [self::faker()->word.'/'.self::faker()->word.'/'.self::randomFileName()],
         ];
     }
 }
