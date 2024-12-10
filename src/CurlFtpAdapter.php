@@ -46,8 +46,8 @@ class CurlFtpAdapter implements FilesystemAdapter
 
     public function __construct(
         private CurlFtpConnectionOptions $connectionOptions,
-        VisibilityConverter $visibilityConverter = null,
-        MimeTypeDetector $mimeTypeDetector = null,
+        ?VisibilityConverter $visibilityConverter = null,
+        ?MimeTypeDetector $mimeTypeDetector = null,
         private bool $detectMimeTypeUsingPath = false,
     ) {
         $this->systemType = $this->connectionOptions->systemType();
@@ -669,7 +669,7 @@ class CurlFtpAdapter implements FilesystemAdapter
     {
         $location = $this->prefixer()->prefixPath($directory);
         $listing = $this->ftpRawlist('-aln', $location);
-        /** @var StorageAttributes[] $listing */
+        /** @var iterable<StorageAttributes> $listing */
         $listing = $this->normalizeListing($listing, $directory);
 
         foreach ($listing as $item) {

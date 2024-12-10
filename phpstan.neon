@@ -3,11 +3,9 @@ parameters:
     paths:
         - src
         - tests
-    checkMissingIterableValueType: false
     reportUnmatchedIgnoredErrors: false
-    checkGenericClassInNonGenericObjectType: false
     scanFiles:
-    excludes_analyse:
     ignoreErrors:
+        - identifier: missingType.iterableValue
+        - identifier: missingType.generics
     tmpDir: phpstan
-
