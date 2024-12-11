@@ -347,7 +347,7 @@ class CurlFtpAdapter implements FilesystemAdapter
         [$code] = explode(' ', end($response), 2);
 
         if ((int) $code !== 250) {
-            throw UnableToDeleteFile::atLocation($path, 'the file still exists');
+            throw UnableToDeleteFile::atLocation($path, 'unable to delete file : '.$this->connection->lastError().' '.implode(' ', $response));
         }
     }
 
@@ -395,6 +395,11 @@ class CurlFtpAdapter implements FilesystemAdapter
         $connection = $this->connection();
         $request = sprintf('SITE CHMOD %o %s', $mode, $location);
         $response = $this->rawCommand($connection, $request);
+
+        if (empty($response) || strpos(end($response), ' ') === false) {
+            throw UnableToSetVisibility::atLocation($path, $this->connection->lastError().' '.implode(' ', $response));
+        }
+
         [$code, $errorMessage] = explode(' ', end($response), 2);
         if ((int) $code !== 200) {
             $errorMessage = 'unable to chmod the file by running SITE CHMOD: '.$errorMessage;
@@ -454,7 +459,13 @@ class CurlFtpAdapter implements FilesystemAdapter
         $connection = $this->connection();
 
         $response = $this->rawCommand($connection, 'MDTM '.$location);
+
+        if (empty($response) || strpos(end($response), ' ') === false) {
+            throw UnableToRetrieveMetadata::lastModified($path, $this->connection->lastError().' '.implode(' ', $response));
+        }
+
         [$code, $time] = explode(' ', end($response), 2);
+
         if ($code !== '213') {
             throw UnableToRetrieveMetadata::lastModified($path, $time);
         }
@@ -481,7 +492,13 @@ class CurlFtpAdapter implements FilesystemAdapter
     {
         $location = $this->prefixer()->prefixPath($path);
         $response = $this->rawCommand($this->connection(), 'SIZE '.$location);
+
+        if (empty($response) || strpos(end($response), ' ') === false) {
+            throw UnableToRetrieveMetadata::fileSize($path, $this->connection->lastError().' '.implode(' ', $response));
+        }
+
         [$code, $fileSize] = explode(' ', end($response), 2);
+
         if ($code != '213') {
             throw UnableToRetrieveMetadata::fileSize($path, $fileSize);
         }
@@ -773,7 +790,13 @@ class CurlFtpAdapter implements FilesystemAdapter
             if ($mode !== false) {
                 $request = sprintf('SITE CHMOD %o %s', $mode, $location);
                 $response = $this->rawCommand($connection, $request);
+
+                if (empty($response) || strpos(end($response), ' ') === false) {
+                    throw UnableToCreateDirectory::atLocation($dirPath, 'unable to chmod the directory by running SITE CHMOD: '.$this->connection->lastError().' '.implode(' ', $response));
+                }
+
                 [$code, $errorMessage] = explode(' ', end($response), 2);
+
                 if ((int) $code !== 200) {
                     $errorMessage = 'unable to chmod the directory by running SITE CHMOD: '.$errorMessage;
                     throw UnableToCreateDirectory::atLocation($dirPath, $errorMessage);
