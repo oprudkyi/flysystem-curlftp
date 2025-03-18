@@ -49,8 +49,8 @@ abstract class TestCase extends BaseTestCase
 
     public function tearDown(): void
     {
+        $this->adapter->disconnect();
         $this->adapter = null;
-        unset($this->adapter);
         $this->clearResources();
     }
 
