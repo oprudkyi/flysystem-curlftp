@@ -62,7 +62,16 @@ class CurlFtpAdapter implements FilesystemAdapter
      */
     public function __destruct()
     {
+        $this->disconnect();
+    }
+
+    /**
+     * Disconnect FTP connection.
+     */
+    public function disconnect(): void
+    {
         if ($this->connection !== null) {
+            $this->connection->setOption(CURLOPT_FORBID_REUSE, true);
             $this->connection = null;
         }
     }
