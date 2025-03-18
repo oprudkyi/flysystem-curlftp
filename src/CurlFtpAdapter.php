@@ -532,7 +532,7 @@ class CurlFtpAdapter implements FilesystemAdapter
             $options = '';
         }
 
-        $request = rtrim('LIST '.$options.$path);
+        $request = rtrim('LIST '.($options ? $options.' ' : '').$path);
         $listing = $this->connection()->exec([CURLOPT_CUSTOMREQUEST => $request]);
 
         if ($listing === false) {
