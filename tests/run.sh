@@ -2,12 +2,13 @@
 
 docker_compose()
 {
+	# shellcheck disable=SC2068
 	docker-compose -p flysystem-curlftp-tests -f tests/docker/docker-compose.yml $@
 }
 
 error_test()
 {
-	docker_compose down
+	docker_compose down  --remove-orphans
 	exit "$1"
 }
 
@@ -21,7 +22,7 @@ echo
 echo "-----------"
 echo "Test ftp adapter with vsftpd"
 echo "Launching the vsftpd on port 221"
-docker_compose up -d vsftpd
+docker_compose up -d vsftpd --remove-orphans
 docker_compose run wait vsftpd:21 -t 30
 
 echo 
@@ -36,13 +37,13 @@ if test $rc != 0; then
 fi
 
 # stopping containers
-docker_compose down
+docker_compose down --remove-orphans
 
 echo
 echo "-----------"
 echo "Test ftp adapter with pure-ftpd"
 echo "Launching the pure-ftpd on port 222"
-docker_compose up -d pure-ftpd
+docker_compose up -d pure-ftpd --remove-orphans
 docker_compose run wait pure-ftpd:21 -t 30
 
 echo 
@@ -57,7 +58,7 @@ if test $rc != 0; then
 fi
 
 # stopping containers
-docker_compose down
+docker_compose down --remove-orphans
 
 echo
 echo "-----------"
