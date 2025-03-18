@@ -4,12 +4,13 @@
 
 docker_compose()
 {
+	# shellcheck disable=SC2068
 	docker-compose -p flysystem-curlftp-tests -f tests/docker/docker-compose.yml $@
 }
 
 error_test()
 {
-	docker_compose down
+	docker_compose down --remove-orphans
 	exit "$1"
 }
 
@@ -27,7 +28,7 @@ echo ""
 echo "-----------"
 echo "Test ftp adapter with vsftpd with implicit FTP over SSL"
 echo "Launching the vsftpd on port 990"
-docker_compose up -d vsftpd-implicit-ssl
+docker_compose up -d vsftpd-implicit-ssl --remove-orphans
 docker_compose run wait vsftpd-implicit-ssl:990 -t 30
 
 echo ""
@@ -42,7 +43,7 @@ if test $rc != 0; then
 fi
 
 # stopping containers
-docker_compose down
+docker_compose down  --remove-orphans
 
 echo
 echo "-----------"
