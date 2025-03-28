@@ -29,6 +29,7 @@ class CurlFtpConnectionOptions
         private ?string $proxyUsername = null,
         private ?string $proxyPassword = null,
         private bool $verbose = false,
+        private ?int $maxCachedConnections = null, // https://curl.se/libcurl/c/CURLOPT_MAXCONNECTS.html
     ) {
     }
 
@@ -142,6 +143,11 @@ class CurlFtpConnectionOptions
         return $this->verbose;
     }
 
+    public function maxCachedConnections(): ?int
+    {
+        return $this->maxCachedConnections;
+    }
+
     /**
      * Returns the base url of the connection.
      */
@@ -177,6 +183,7 @@ class CurlFtpConnectionOptions
             $options['proxyUsername'] ?? null,
             $options['proxyPassword'] ?? null,
             $options['verbose'] ?? false,
+            $options['maxCachedConnections'] ?? null,
         );
     }
 }
