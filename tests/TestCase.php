@@ -43,6 +43,7 @@ abstract class TestCase extends BaseTestCase
                 'sslVerifyPeer' => 0, // using 0 is insecure, use it only if you know what you're doing
                 'sslVerifyHost' => 0, // using 0 is insecure, use it only if you know what you're doing
                 'verbose' => false, // set verbose mode on/off
+                'maxCachedConnections' => 1, // https://curl.se/libcurl/c/CURLOPT_MAXCONNECTS.html
             ])
         );
     }

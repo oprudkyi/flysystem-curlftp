@@ -52,6 +52,13 @@ $adapter = new CurlFtpAdapter(
       'sslVerifyHost' => 0, // using 0 is insecure, use it only if you know what you're doing
       'timestampsOnUnixListingsEnabled' => true,
 
+      /** optional limit for curl connection caching
+      * allows to reduce count of tcp connections to avoid hitting ftp-server max connections/max clients limits
+      * https://curl.se/libcurl/c/CURLOPT_MAXCONNECTS.html
+      * if not set then used curl default value (5)
+      'maxCachedConnections' => 1,
+      */
+
       /** proxy settings */
       'proxyHost' => 'proxy-server.example.com',
       'proxyPort' => 80,

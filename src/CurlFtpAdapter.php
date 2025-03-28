@@ -70,10 +70,7 @@ class CurlFtpAdapter implements FilesystemAdapter
      */
     public function disconnect(): void
     {
-        if ($this->connection !== null) {
-            $this->connection->setOption(CURLOPT_FORBID_REUSE, true);
-            $this->connection = null;
-        }
+        $this->connection = null;
     }
 
     /**
@@ -117,6 +114,10 @@ class CurlFtpAdapter implements FilesystemAdapter
 
         if ($this->connectionOptions->verbose()) {
             $this->connection->setOption(CURLOPT_VERBOSE, $this->connectionOptions->verbose());
+        }
+
+        if ($this->connectionOptions->maxCachedConnections() != null) {
+            $this->connection->setOption(CURLOPT_MAXCONNECTS, $this->connectionOptions->maxCachedConnections());
         }
 
         $this->pingConnection();
